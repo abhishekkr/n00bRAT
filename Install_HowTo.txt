@@ -1,0 +1,14 @@
+ 
+HOW TO INSTALL
+---------------------------------------------------------
+Method#1: 
+	(a.) Open a Command Shell
+	(b.) Change Location to n00bRAT's Directory
+	(c.) Execute following process:	
+		gcc -o http ABK_n00bRAT.c
+
+Method#2
+	(a.) Open a Command Shell
+	(b.) Change Location to n00bRAT's Directory
+	(c.) Execute following process:	
+		make
