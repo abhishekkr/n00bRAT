@@ -8,9 +8,10 @@
 
 #configuration
 CC = gcc
-A_OUTFILE = http
+A_OUTFILE = bin/http
 A_MAINFILE = ABK_n00bRAT.c
 
 #creating your n00bRAT Server
 $(A_OUTFILE) : $(A_MAINFILE)
+	mkdir -p bin
 	$(CC) -o $(A_OUTFILE) $(A_MAINFILE)
