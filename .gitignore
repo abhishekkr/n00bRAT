@@ -9,3 +9,4 @@ temp/*
 .config
 *.lock
 *.log
+bin/*
