@@ -6,12 +6,12 @@ v0.6
 It's a tiny C program which emulates a bare minimum HTTP server for fingerprinting security scanners.
 It let's one control the machine over this faked HTTPv0.1 protocol.
 
-![image of Rat](rat.png)
+![image of Rat](docs/rat.png)
 
 > This n00b server was created as RAT during college for Ethical Hacking course.
 >
 > What is it / Why it is / etc.
-> Read [n00bRAT Report](./n00bRAT_Report.pdf) in any PDF Reader for information
+> Read [n00bRAT Report](./docs/n00bRAT_Report.pdf) in any PDF Reader for information
 
 
 ### HOW TO INSTALL
