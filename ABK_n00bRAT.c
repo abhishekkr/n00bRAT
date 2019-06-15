@@ -4,7 +4,7 @@
                     use it as a Trojan Test for your Firewall/IDS/IPS
                     or to Remotely Admin. your Machines ViA Web.Browsers
                     Client side just requires a Web Browser like FireFox, Opera, etc.
-@version        : 0.5beta
+@version        : 0.7
 @author         : AbhishekKr [http://abhishekkr.github.io/] -=ABK=-
 **********************************************************************************************/
 
@@ -25,12 +25,14 @@ char *httpResponse200 = "HTTP/1.1 200 OK\nServer: n00b\nContent-Type: text/html\
                         "<a href=\'3\'>/etc/resolv.conf (the resolved IP entries)</a><br/>"
                         "<a href=\'4\'>process list</a><br/>"
                         "<a href=\'5\'>iptables --flush (Clear all entries in Firewall)</a><br/>"
-                        "<a href=\'6\'>ifconfig -a</a><br/><a href=\'7\'>ifconfig -s</a><br/>"
-                        "<a href=\'8\'>poweroff</a><br/><a href=\'9\'>reboot</a><br/>"
+                        "<a href=\'6\'>ifconfig -a</a><br/>"
+                        "<a href=\'7\'>ifconfig -s</a><br/>"
+                        "<a href=\'8\'>poweroff</a><br/>"
+                        "<a href=\'9\'>reboot</a><br/>"
                         "</div><br/>====================================<br/><br/></body></html>";
 
 //the string to be copied to Response if incorrect Request
-char *httpResponse400 = "HTTP/1.1 200 OK\nServer: n00b\nContent-Type: text/html\n\n"
+char *httpResponse400 = "HTTP/1.1 400 Bad Request\nServer: n00b\nContent-Type: text/html\n\n"
                         "<html><head><title>TuXperiment</title></head>"
                         "<body><center><h1>Experimental Network Server</h1>"
                         "<h3>Under Constrution</h3></center>"
@@ -68,20 +70,27 @@ int main()
   }
 
   server.sin_family = AF_INET;
-  server.sin_port = htons(PORT);   /* Remember htons() from "Conversions" section? =) */
   server.sin_addr.s_addr = INADDR_ANY;  /* INADDR_ANY puts your IP address automatically */
-  bzero(&(server.sin_zero),8); /* zero the rest of the structure */
 
-  if(bind(fd,(struct sockaddr*)&server,sizeof(struct sockaddr))==-1){ /* calls bind() */
-    system("echo 'bind() error' >> zerror.log");
-    printf("server: bind() error\n");
-    exit(-1);
+  int noobPort = PORT;
+  for (noobPort=PORT; noobPort < 65535; noobPort = noobPort+1){
+      server.sin_port = htons(noobPort);   /* Remember htons() from "Conversions" section? =) */
+      bzero(&(server.sin_zero),8); /* zero the rest of the structure */
+
+      if(bind(fd,(struct sockaddr*)&server,sizeof(struct sockaddr))==-1){ /* calls bind() */
+          system("echo 'bind() error' >> zerror.log");
+          printf("server: bind(%d) error\n", noobPort);
+          if (noobPort >= 65535) {
+              exit(-1);
+          }
+      } else {
+          break;
+      }
   }
-
+  printf("listing at :%d", noobPort);
   if(listen(fd,BACKLOG) == -1){  /* calls listen() */
-    system("echo 'listen() error' >> zerror.log");
-    printf("server: listen() error\n");
-    exit(-1);
+      system("echo 'listen() error' >> zerror.log");
+      printf("server: listen() error\n");
   }
 
   while(1){

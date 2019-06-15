@@ -1,7 +1,7 @@
 
 # n00bRAT
 
-v0.6
+v0.7
 
 It's a tiny C program which emulates a bare minimum HTTP server for fingerprinting security scanners.
 It let's one control the machine over this faked HTTPv0.1 protocol.

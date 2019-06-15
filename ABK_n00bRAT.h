@@ -12,8 +12,6 @@
 #include <errno.h>
 
 #define PORT 80   /* Port that will be opened */ 
-#define PORT2 8080   /* Port that will be opened */ 
-#define PORT3 443   /* Port that will be opened */ 
 
 #define MAXDATASIZE 100   /* Max number of bytes of data */
 #define MAXSTRSIZE 65535
